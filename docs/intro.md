@@ -1,47 +1,19 @@
----
-sidebar_position: 1
----
+# Introduction
 
-# Zipup Intro
+Zipup Cloud is an open-source personal cloud for JavaScript developers.
 
-Let's discover **Docusaurus in less than 5 minutes**.
+Once installed, Zipup allows you to deploy and run multiple JavaScript applications. Each application has access to core services like Postgres, Valkey (Redis), and VictoriaLogs(a powerful logging system with rich querying capabilities).
 
-## Getting Started
+In addition to backend applications, you can also host multiple static websites.
 
-Get started by **creating a new site**.
+All services (Postgres, Valkey, and Victorialogs) are securely accessible over a VPN connection. This enables many posibilities and helpe you to cover advanced use cases.
 
-Or **try Docusaurus immediately** with **[docusaurus.new](https://docusaurus.new)**.
+You also get automatic ssl certs from Let's encrypt for your applications.
 
-### What you'll need
+Zipup brings these components together into a single system that is simple to run, easy to understand, and built using proven technologies.
 
-- [Node.js](https://nodejs.org/en/download/) version 20.0 or above:
-  - When installing Node.js, you are recommended to check all checkboxes related to dependencies.
 
-## Generate a new site
 
-Generate a new Docusaurus site using the **classic template**.
+## Architecture
 
-The classic template will automatically be added to your project after you run the command:
-
-```bash
-npm init docusaurus@latest my-website classic
-```
-
-You can type this command into Command Prompt, Powershell, Terminal, or any other integrated terminal of your code editor.
-
-The command also installs all necessary dependencies you need to run Docusaurus.
-
-## Start your site
-
-Run the development server:
-
-```bash
-cd my-website
-npm run start
-```
-
-The `cd` command changes the directory you're working with. In order to work with your newly created Docusaurus site, you'll need to navigate the terminal there.
-
-The `npm run start` command builds your website locally and serves it through a development server, ready for you to view at http://localhost:3000/.
-
-Open `docs/intro.md` (this page) and edit some lines: the site **reloads automatically** and displays your changes.
+![Zipup Cloud Architecture](/img/arch.png)
