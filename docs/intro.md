@@ -6,7 +6,7 @@ Once installed, Zipup allows you to deploy and run multiple JavaScript applicati
 
 In addition to backend applications, you can also host multiple static websites.
 
-All services (Postgres, Valkey, and Victorialogs) are securely accessible over a VPN connection. This enables many posibilities and helpe you to cover advanced use cases.
+All services (Postgres, Valkey, and Victorialogs) are securely accessible over a VPN connection. This enables many posibilities and helps you to cover advanced use cases.
 
 You also get automatic ssl certs from Let's encrypt for your applications.
 

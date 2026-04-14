@@ -4,7 +4,7 @@ sidebar_position: 2
 
 # Getting Started with Zipup Cloud
 
-Welcome to Zipup Cloud! This guide will walk you through the initial installation and the essential configuration steps to get your instance secured and ready for production.
+Welcome to Zipup Cloud! This guide will walk you through the initial installation and setup.
 
 ## Connect to Your Server
 
@@ -13,11 +13,11 @@ First, SSH into your server:
 ```bash
 ssh <your-user>@<your-server-ip>
 ```
+:::note
+Make sure ports 80, 443 and 51820(wireguard) are open.
+:::
 
-Make sure:
-
-- Your server is publicly accessible
-- Ports 80 and 443 are open
+---
 
 ## Install ZipUp Cloud
 
@@ -34,7 +34,9 @@ This script will:
 - Start the ZipUp Cloud platform
 - ⏳ Installation may take a few minutes.
 
-## Access the Dashboard
+---
+
+## Access the Admin Console
 
 Once installation is complete, open your browser and visit:
 
@@ -42,15 +44,21 @@ Once installation is complete, open your browser and visit:
 http://<your-server-ip>
 ```
 
+You should see the ZipUp Cloud admin console.
+
+:::note
 The default username and password is `zipup` and `zipup`.
-You should see the ZipUp Cloud dashboard. Notice you are currently on http and we need to move to https for secure connection.
+
+Notice you are currently on http and we need to move to https for secure connection.
+:::
+---
 
 ## Domain Configuration
 
-Before you can access the Zipup Cloud dashboard securely, you must map a domain to your server's IP address.
+Before you can access the Zipup Cloud admin console securely, you must map a domain to your server's IP address.
 
 :::tip
-Always ensure your domain is fully propagated before setting it in the dashboard to avoid issues with automated SSL certificate generation.
+Always ensure your domain is fully propagated before setting it in the admin console to avoid issues with automated SSL certificate generation.
 :::
 
 - Point your DNS: Create an A record in your DNS provider's dashboard pointing your desired domain (e.g., cloud.yourdomain.com / wildcard domain) to your server's public IP.
@@ -63,15 +71,19 @@ Always ensure your domain is fully propagated before setting it in the dashboard
 
 - Ensure the output matches your server's IP address.
 
+---
+
 ## Setting the Domain & Enabling HTTPS
 
-Once the script finishes and your DNS is ready, access the dashboard via the server's IP address.
+Once the script finishes and your DNS is ready, access the admin console via the server's IP address.
 
 1. Go to **Settings** (sidebar)
 2. Enter your domain
 3. Save changes
 
 The system will automatically attempt to provision an SSL certificate. Once finished, log in using your new https:// URL to ensure you are on a secure connection.
+
+---
 
 ## Updating Your Credentials
 

@@ -5,6 +5,95 @@ sidebar_position: 3
 # Accessing Postgres, Valkey and Victorialogs over VPN
 
 
-:::info
-Work in Progress
+Zipup Cloud uses WireGuard to provide secure access to internal services like Postgres, Valkey (Redis), and VictoriaLogs.
+
+This allows you to connect to your infrastructure as if it were running locally.
+
+---
+
+## Installing WireGuard
+
+Install the WireGuard client from the official website:
+
+👉 https://www.wireguard.com/install/
+
+---
+
+## Creating a Peer
+
+1. In the zipup admin console,  go to the **WireGuard** section from the sidebar
+2. Click **Create Peer**
+3. A new peer will be created
+
+After creating a peer:
+
+1. Click **Download Config**
+2. This will download a `.conf` file for that peer
+:::note
+Each machine(like your local machine, your CI/CD runner) requires a separate peer configuration
+
+Keep your .conf file secure
 :::
+---
+
+## Connecting to WireGuard
+
+1. Open the WireGuard application
+2. Click **Import Tunnel**
+3. Select the downloaded `.conf` file
+4. Click **Connect**
+5. Wireguard application should show the status `active`
+6. The application should confirm about the latest handshake.
+
+
+---
+
+## Accessing Services
+
+Once connected, you can access all core services using the WireGuard network.
+
+### Host
+
+10.13.13.1
+
+
+### Ports
+
+- **Postgres:** `5432`
+- **Valkey (Redis):** `6379`
+- **VictoriaLogs:** `9428`
+
+---
+
+## Connecting to Postgres
+
+You can use:
+
+- `psql` (CLI)
+- GUI tools like DBeaver
+
+Example:
+
+```bash
+psql -h 10.13.13.1 -U zipup -p 5432
+```
+---
+
+## Connecting to Valkey (Redis)
+
+You can use:
+
+- redis-cli `redis-cli -h 10.13.13.1 -p 6379`
+- GUI tools like RedisInsight
+
+
+---
+
+## Accessing VictoriaLogs
+
+Open following url browser:
+
+👉 http://10.13.13.1:9428/select/vmui
+
+This provides a powerful UI for querying and analyzing logs.
+

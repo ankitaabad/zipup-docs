@@ -36,3 +36,52 @@
 
   --docusaurus-highlighted-code-line-bg: rgba(75, 141, 247, 0.15);
 }
+.theme-code-block pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+
+/* FAQ container */
+details {
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  background: var(--ifm-background-surface-color);
+  transition: all 0.2s ease;
+}
+
+/* Hover effect */
+details:hover {
+  border-color: var(--ifm-color-primary);
+}
+
+/* Open state */
+details[open] {
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* Question (summary) */
+details summary {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  list-style: none;
+}
+
+/* Remove default arrow */
+details summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Custom arrow */
+
+
+
+/* Answer spacing */
+details p,
+details ul {
+  margin-top: 0.75rem;
+}

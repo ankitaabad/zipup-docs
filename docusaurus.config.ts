@@ -1,4 +1,4 @@
-import { Heading } from '@theme/Heading';
+import { Heading } from "@theme/Heading";
 import { themes as prismThemes } from "prism-react-renderer";
 import type { Config } from "@docusaurus/types";
 import type * as Preset from "@docusaurus/preset-classic";
@@ -9,7 +9,7 @@ const config: Config = {
   title: "Zipup docs",
   tagline: "Your Personal Cloud",
   favicon: "img/favicon.ico",
-  
+
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {
     v4: true // Improve compatibility with the upcoming Docusaurus v4
@@ -140,7 +140,8 @@ const config: Config = {
     // },
     prism: {
       theme: prismThemes.github,
-      darkTheme: prismThemes.gruvboxMaterialDark
+      darkTheme: prismThemes.gruvboxMaterialDark,
+      additionalLanguages: ["bash"]
     }
   } satisfies Preset.ThemeConfig
 };

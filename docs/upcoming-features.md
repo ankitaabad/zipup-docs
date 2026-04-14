@@ -1,4 +1,4 @@
-# Upcoming features
+# Upcoming Features
 
 - Forward Auth Proxy
 - Layers

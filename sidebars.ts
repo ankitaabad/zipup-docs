@@ -26,7 +26,8 @@ const sidebars: SidebarsConfig = {
     "wireguard",
     "multitenant-isolation",
     "queues",
-    "upcoming-features"
+    "upcoming-features",
+    "faqs"
   ]
 
   // docSidebar: [

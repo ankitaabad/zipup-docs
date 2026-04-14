@@ -4,14 +4,14 @@ sidebar_position: 8
 
 # Working with Queues
 
-In zipup cloud there is no dedicated queuing service but Since Zipup includes Redis out of the box, you can build reliable background job systems using `BullMQ`
+In zipup cloud there is no dedicated queuing service but Since Zipup includes Valkey(Redis) out of the box, you can build reliable background job systems using `BullMQ`
 
 
 
-## Using Redis for Queues
+## Using Valkey(Redis) for Queues
 
 
-BullMQ is a popular Node.js queue library built on top of Redis, and works great for:
+BullMQ is a popular Node.js queue library built on top of redis, and works great for:
 
 - Background job processing
 - Delayed jobs

@@ -1,10 +1,162 @@
 ---
-sidebar_position: 3
+## sidebar_position: 3
+---
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+
+# Deploying an Application
+
+Zipup Cloud provides a simple flow to create and deploy applications using the UI and the Zipup CLI.
+
+The process involves:
+
+1. Creating an application from the UI
+2. Retrieving the app credentials
+3. Deploying using the Zipup CLI
+
 ---
 
-# Deploying App
+## Creating an Application
 
+1. From the sidebar, select the type of application:
+   - **Web App**
+   - **Static Site**
 
-:::info
-Work in Progress
+2. Click **Create New** from the submenu
+
+3. Provide an application name and click **Create**
+4. Define the `start command` for your application. This command is executed when the deployed artifact starts (e.g., `npm run start` or `node server.js`).
+
+:::warning
+The start command is required for deployment.
 :::
+
+Once created, the application is ready to receive deployments.
+
+---
+
+## Getting Credentials
+
+After creating the app, you can:
+
+- Download the configuration file  
+  **or**
+- Copy:
+  - **App Key**
+  - **Secret Key**
+
+These credentials are required to deploy your application using the Zipup CLI.
+
+---
+
+## Installing Zipup CLI
+
+Zipup CLI is the official tool used to deploy applications to Zipup Cloud.
+
+Install it globally using npm:
+
+<Tabs groupId="package-manager">
+  <TabItem value="npm" label="npm" default>
+    ```bash
+    npm install -g zipup-cli
+    ```
+  </TabItem>
+  <TabItem value="pnpm" label="pnpm">
+    ```bash
+    pnpm add -g zipup-cli
+    ```
+  </TabItem>
+  <TabItem value="yarn" label="yarn">
+    ```bash
+    yarn global add zipup-cli
+    ```
+  </TabItem>
+
+</Tabs>
+
+Deploying with Zipup CLI
+Basic Command
+
+```bash
+zipup deploy --build-folder .
+```
+
+Configuration Methods
+
+Zipup CLI supports three ways to provide configuration:
+
+1. Environment Variables (Recommended)
+
+```bash
+export ZIPUP_HOST=https://admin.zipup.dev
+export ZIPUP_APP_KEY=your_app_key
+export ZIPUP_SECRET_KEY=your_secret_key
+
+zipup deploy --build-folder .
+```
+
+2. CLI Flags
+
+```bash
+zipup deploy \
+  --host https://admin.zipup.dev \
+  --app-key your_app_key \
+  --secret-key your_secret_key \
+  --build-folder .
+```
+
+3. Config File (zipup.config.json)
+
+You can also define configuration in a file named zipup.config.json.
+
+This file should be placed in the directory from which you run the CLI command.
+
+```json showLineNumbers
+{
+  "host": "https://admin.zipup.dev",
+  "appKey": "your_app_key",
+  "secretKey": "your_secret_key",
+  "buildFolder": ".",
+  "ignore": ["node_modules", ".git"]
+}
+```
+
+---
+
+## What Zipup CLI Does
+
+- Packages your build artifact
+- Applies ignore rules
+- Signs the artifact for integrity verification
+- Uploads it to Zipup Cloud
+- Performs a health check after deployment
+
+---
+
+## Persistent Storage
+
+If your application needs to store data:
+
+Use the /data directory
+This directory is persisted across deployments
+
+---
+
+## Environment Variables and Secrets
+
+For Web Apps only:
+
+- You can configure:
+  - Environment Variables
+  - Secrets
+
+From the UI:
+
+- Go to Web Apps
+- Select your application
+- Use:
+  - Env Variables tab
+  - Secrets tab
+
+More about env variables and secrets covered in [this section.](/docs/envs)
