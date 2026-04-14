@@ -134,7 +134,7 @@ export default function Home() {
               },
               {
                 icon: "🔐",
-                title: "Secure by Default",
+                title: "VPN",
                 desc: "WireGuard-powered private networking"
               },
               {
@@ -145,7 +145,7 @@ export default function Home() {
               {
                 icon: "📊",
                 title: "Logs & Observability",
-                desc: "Real-time logs with powerful querying capabilities"
+                desc: "Powerful logging solution with rich querying capabilities"
               },
               {
                 icon: "🌐",
