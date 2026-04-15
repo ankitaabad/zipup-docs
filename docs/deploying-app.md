@@ -181,11 +181,11 @@ This file should be placed in the directory from which you run the CLI command.
 
 ## Persistent Storage
 
-If your application needs to store data:
+You will want some data to persist across deployments.
 
-Use the /data directory
-This directory is persisted across deployments
-
+:::note
+Use the `/data` directory for persistent storage. This directory is persisted across deployments.
+:::
 ---
 
 ## Environment Variables and Secrets
