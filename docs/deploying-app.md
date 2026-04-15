@@ -1,9 +1,9 @@
 ---
 ## sidebar_position: 3
 ---
+
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
-
 
 # Deploying an Application
 
@@ -30,7 +30,52 @@ The process involves:
 
 :::warning
 The start command is required for deployment.
+
 :::
+
+:::note
+You must run your app on `ZIPUP_PORT` env variable.
+:::
+
+<Tabs>
+<TabItem value="hono" label="Hono">
+```js
+import { Hono } from "hono";
+import { serve } from "@hono/node-server";
+
+const app = new Hono();
+const port = process.env.ZIPUP_PORT || 3000;
+
+app.get("/", (c) => {
+  return c.text("Hello from Hono on Zipup Cloud");
+});
+
+serve({
+  fetch: app.fetch,
+  port
+});
+```
+
+  </TabItem> 
+  <TabItem value="express" label="Express">
+```js
+import express from "express";
+
+const app = express();
+const port = process.env.ZIPUP_PORT || 3000;
+
+app.get("/", (req, res) => {
+  res.send("Hello from Express on Zipup Cloud");
+});
+
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
+    ```
+
+  </TabItem> 
+  
+</Tabs>
 
 Once created, the application is ready to receive deployments.
 

@@ -74,6 +74,7 @@ Currently, deployments run on: `node:24-bookworm-slim`
 - Assuming all file writes are persistent. Only data written to the `/data` directory is preserved across deployments.
 - Building on a different architecture (e.g., ARM vs x86) with native binary dependencies can lead to runtime incompatibilities. Zipup is currently tested on x86 environments—ensure your build matches the target architecture.
 - Relying on `console.log` for logging. While it works, using structured logging allows you to take full advantage of VictoriaLogs, including powerful querying and filtering.
+- Not running your application on `ZIPUP_PORT` port. It is available in env variables, You can access it with `process.env.ZIPUP_PORT`.
 - using `zipup.config.json` for `api key` and `secret key`. Although this works but it is just convenience. Always gitignore `zipup.config.json` and prefer environment variables for `api key` and `secret key`.
 - Forgetting to set a `start` command before deployment.
 
