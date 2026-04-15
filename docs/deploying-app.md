@@ -26,7 +26,7 @@ The process involves:
 2. Click **Create New** from the submenu
 
 3. Provide an application name and click **Create**
-4. Define the `start command` for your application. This command is executed when the deployed artifact starts (e.g., `npm run start` or `node server.js`).
+4. Define the `start command` for your application. This command is executed when an artifact is uploaded or app is restarted. (e.g., `npm run start` or `node server.js`).
 
 :::warning
 The start command is required for deployment.
