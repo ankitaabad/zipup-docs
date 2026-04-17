@@ -1,0 +1,224 @@
+
+# CI/CD
+
+When working with postgres the deployment is generally a two step process, first we need to run our schema migrations and second deploy the code.
+
+## Install wireguard and Connect to VPN
+
+
+Our PostgreSQL instance is not exposed to the public internet. It is only accessible over a secure VPN tunnel, so the CI runner must first establish a connection using WireGuard.
+
+To make this work: Create a WireGuard peer and download its configuration file. This process is explained in detail here:
+
+👉 [Accessing Postgres, Valkey and Victorialogs over VPN](./wireguard.mdx)
+
+Store the downloaded configuration securely as a GitHub Secret (WG_CONFIG)
+
+During the workflow, this config is written to the runner, the VPN tunnel is established, and connectivity is verified before proceeding with any database or deployment steps.
+
+
+```yaml
+
+    steps:
+      - name: Install WireGuard
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wireguard
+
+      - name: Write WireGuard config securely
+        run: |
+          set -euo pipefail
+
+          if [ -z "${{ secrets.WG_CONFIG }}" ]; then
+            echo "WG_CONFIG secret is missing"
+            exit 1
+          fi
+
+          echo "${{ secrets.WG_CONFIG }}" | sudo tee /etc/wireguard/wg0.conf > /dev/null
+          sudo chmod 600 /etc/wireguard/wg0.conf
+
+      - name: Start WireGuard
+        run: sudo wg-quick up wg0
+
+      - name: Wait for WireGuard readiness
+        run: |
+          for i in {1..10}; do
+            if sudo ping -c 1 -W 1 10.13.13.1 >/dev/null 2>&1; then
+              echo "VPN is reachable"
+              exit 0
+            fi
+
+            echo "Waiting for VPN..."
+            sleep 1
+          done
+
+          echo "WireGuard failed"
+          exit 1
+
+      - name: Check Postgres port is reachable
+        run: |
+          for i in {1..5}; do
+            nc -z 10.13.13.1 5432 && exit 0
+            sleep 2
+          done
+          exit 1
+
+```
+
+## Build, Migrate and Deploy
+
+Once the secure VPN connection is established, the workflow proceeds with fetching the code, preparing the environment, building the code and deploying the code on zipup cloud.
+You can get the `ZIPUP_APP_KEY` AND `ZIPUP_SECRET_KEY` from the app page in zipup cloud.
+
+```yaml
+
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          run_install: false
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache-dependency-path: postgres/pnpm-lock.yaml
+          cache: "pnpm"
+
+      - run: pnpm install --frozen-lockfile
+        working-directory: postgres
+
+      - name: Build
+        run: pnpm run build
+        working-directory: postgres
+
+      - name: Run migrations
+        run: pnpm run migrate:up
+        working-directory: postgres
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+
+
+      - name: deploy
+        run: pnpm run deploy
+        working-directory: postgres
+        env:
+          ZIPUP_APP_KEY: ${{ secrets.ZIPUP_APP_KEY }}
+          ZIPUP_SECRET_KEY: ${{ secrets.ZIPUP_SECRET_KEY }}
+
+      - name: Cleanup
+        if: always()
+        run: sudo wg-quick down wg0
+
+```
+
+:::note
+Since for us the code is in subdirectory we are using : `working-directory: postgres`. You don't need this if your code is in root.
+:::
+
+:::note
+Complete working code can be found here. [Zipup Cloud: Postgres Example](https://github.com/ankitaabad/zipup-examples/tree/main/postgres)
+:::
+
+## The complete workflow file
+
+```yaml
+
+name: Postgres Deploy
+
+on:
+  workflow_dispatch:
+
+jobs:
+  Deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install WireGuard
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wireguard
+
+      - name: Write WireGuard config securely
+        run: |
+          set -euo pipefail
+
+          if [ -z "${{ secrets.WG_CONFIG }}" ]; then
+            echo "WG_CONFIG secret is missing"
+            exit 1
+          fi
+
+          echo "${{ secrets.WG_CONFIG }}" | sudo tee /etc/wireguard/wg0.conf > /dev/null
+          sudo chmod 600 /etc/wireguard/wg0.conf
+
+      - name: Start WireGuard
+        run: sudo wg-quick up wg0
+
+      - name: Wait for WireGuard readiness
+        run: |
+          for i in {1..10}; do
+            if sudo ping -c 1 -W 1 10.13.13.1 >/dev/null 2>&1; then
+              echo "VPN is reachable"
+              exit 0
+            fi
+
+            echo "Waiting for VPN..."
+            sleep 1
+          done
+
+          echo "WireGuard failed"
+          exit 1
+
+      - name: Check Postgres port is reachable
+        run: |
+          for i in {1..5}; do
+            nc -z 10.13.13.1 5432 && exit 0
+            sleep 2
+          done
+          exit 1
+
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          run_install: false
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache-dependency-path: postgres/pnpm-lock.yaml
+          cache: "pnpm"
+
+      - run: pnpm install --frozen-lockfile
+        working-directory: postgres
+
+      - name: Build
+        run: pnpm run build
+        working-directory: postgres
+        
+      - name: Run migrations
+        run: pnpm run migrate:up
+        working-directory: postgres
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+
+
+      - name: deploy
+        run: pnpm run deploy
+        working-directory: postgres
+        env:
+          ZIPUP_APP_KEY: ${{ secrets.ZIPUP_APP_KEY }}
+          ZIPUP_SECRET_KEY: ${{ secrets.ZIPUP_SECRET_KEY }}
+
+      - name: Cleanup
+        if: always()
+        run: sudo wg-quick down wg0
+
+```

@@ -55,32 +55,44 @@ Each app gets:
 ```bash
 psql -h 10.13.13.1 -U zipup -p 5432
 ```
+password is `zipup`
 
-### Step 2: Create Database and User
+### Step 2: Set Up Database and Application User
 
-```sql
-CREATE DATABASE app1_db;
-
-CREATE USER app1_user WITH PASSWORD 'strongpassword';
-
-GRANT ALL PRIVILEGES ON DATABASE app1_db TO app1_user;
-```
-
-### Step 3: Restrict Schema Access
-By default every user can access the public schema. We need to remove this access.
+Create a dedicated database and a least-privileged user for your application.
+This ensures your app only has access to what it needs, reducing the risk of accidental or malicious data access.
 
 ```sql
-\c app1_db
+CREATE USER blog_app_user WITH PASSWORD 'strong_password';
 
+# Create database for the blog application
+CREATE DATABASE blog_db;
+
+# Remove all default access to the database from all users
+REVOKE ALL ON DATABASE blog_db FROM PUBLIC;
+
+# Allow only the app user to connect to the database
+GRANT CONNECT ON DATABASE blog_db TO blog_app_user;
+
+# Connect to the newly created database
+\c blog_db
+
+# Remove all default access to the public schema
 REVOKE ALL ON SCHEMA public FROM PUBLIC;
-GRANT ALL ON SCHEMA public TO app1_user;
+
+# Allow app user to use and create objects in public schema
+GRANT USAGE, CREATE ON SCHEMA public TO blog_app_user;
+
+# Ensure future tables in public schema are fully accessible to app user
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO blog_app_user;
 ```
+
 
 ### Connection Details
 From app inside zipup cloud
 
 ```
-DATABASE_URL=postgres://app1_user:strongpassword@10.13.13.1:5432/app1_db
+DATABASE_URL=postgres://blog_app_user:strongpassword@10.13.13.1:5432/blog_db
 ```
 
 ---

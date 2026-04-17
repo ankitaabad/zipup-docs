@@ -25,6 +25,7 @@ const sidebars: SidebarsConfig = {
     "envs",
     "wireguard",
     "multitenant-isolation",
+    "cicd",
     "queues",
     "upcoming-features",
     "faqs"
